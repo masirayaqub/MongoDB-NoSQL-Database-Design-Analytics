@@ -1,0 +1,231 @@
+Task 1:
+
+use ecommerce_portfolio
+switched to db ecommerce_portfolio
+show collections
+db.createCollection("customers")
+db.createCollection("products")
+db.createCollection("orders")
+
+{ ok: 1 }
+
+Task 2:
+
+db.customers.countDocuments()
+db.customers.find().limit(3)
+
+db.products.countDocuments()
+db.products.find().limit(3)
+
+db.orders.countDocuments()
+db.orders.find().limit(3)
+{
+  _id: 'ORD00001',
+  customer_id: 'CUST0013',
+  order_date: '2024-02-11',
+  status: 'Returned',
+  payment_method: 'Credit Card',
+  shipping_city: 'Sylhet',
+  items: [
+    {
+      product_id: 'PROD0061',
+      product_name: 'Action Figure Set',
+      category: 'Toys & Games',
+      unit_price: 30.78,
+      quantity: 2,
+      line_total: 61.56
+    }
+  ],
+  total_amount: 61.56
+}
+{
+  _id: 'ORD00002',
+  customer_id: 'CUST0014',
+  order_date: '2024-09-01',
+  status: 'Shipped',
+  payment_method: 'bKash',
+  shipping_city: 'Houston',
+  items: [
+    {
+      product_id: 'PROD0031',
+      product_name: 'Ceramic Dinner Set',
+      category: 'Home & Kitchen',
+      unit_price: 425.62,
+      quantity: 1,
+      line_total: 425.62
+    },
+    {
+      product_id: 'PROD0043',
+      product_name: 'Yoga Mat',
+      category: 'Sports & Outdoors',
+      unit_price: 358.2,
+      quantity: 5,
+      line_total: 1791
+    }
+  ],
+  total_amount: 2216.62
+}
+{
+  _id: 'ORD00003',
+  customer_id: 'CUST0020',
+  order_date: '2024-06-20',
+  status: 'Delivered',
+  payment_method: 'PayPal',
+  shipping_city: 'Dhaka',
+  items: [
+    {
+      product_id: 'PROD0050',
+      product_name: 'Herbal Shampoo 400ml',
+      category: 'Beauty & Personal Care',
+      unit_price: 377.97,
+      quantity: 2,
+      line_total: 755.94
+    }
+  ],
+  total_amount: 755.94
+}
+
+
+Task 3:
+db.customers.insertOne({
+  _id: "CUST333",
+  name: "Lima Tawsar",
+  email: "ltiw@example.com",
+  city: "Dhaka",
+  membership_tier: "Gold",
+  join_date: "2026-06-01",
+  is_active: true
+});
+{
+  acknowledged: true,
+  insertedId: 'CUST333'
+}
+db.orders.insertOne({
+  id: "ORD333",
+  customer_id: "CUST333",
+  order_date: "2026-06-05",
+  status: "Pending",
+  total_amount: 1500,
+  items: [{ product_id: "PROD010", quantity: 2, price_per_unit: 750 }]
+});
+{
+  acknowledged: true,
+  insertedId: ObjectId('6aa19f99ad408fddf754f750')
+}
+db.products.find(
+  { price: { $gt: 100 }, category: { $in: ["Electronics", "Stationery"] } },
+  { name: 1, price: 1, category: 1, _id: 0 }
+);
+{
+  name: 'Wireless Mouse',
+  category: 'Electronics',
+  price: 128.52
+}
+{
+  name: 'Bluetooth Speaker',
+  category: 'Electronics',
+  price: 442.65
+}
+{
+  name: 'USB-C Charger',
+  category: 'Electronics',
+  price: 463.25
+}
+{
+  name: 'Smartwatch',
+  category: 'Electronics',
+  price: 441.3
+}
+{
+  name: 'Noise Cancelling Headphones',
+  category: 'Electronics',
+  price: 392.28
+}
+{
+  name: '4K Monitor',
+  category: 'Electronics',
+  price: 137.07
+}
+{
+  name: 'Portable SSD 1TB',
+  category: 'Electronics',
+  price: 436.72
+}
+{
+  name: 'Mechanical Keyboard',
+  category: 'Electronics',
+  price: 409.21
+}
+{
+  name: 'Webcam HD',
+  category: 'Electronics',
+  price: 115.35
+}
+{
+  name: 'Power Bank 20000mAh',
+  category: 'Electronics',
+  price: 142.91
+}
+db.orders.find({ "items.product_id": "PROD010" },
+{ customer_id: 1, items: 1, total_amount: 1 }
+);
+{
+  _id: ObjectId('6aa19f99ad408fddf754f750'),
+  customer_id: 'CUST333',
+  total_amount: 1500,
+  items: [
+    {
+      product_id: 'PROD010',
+      quantity: 2,
+      price_per_unit: 750
+    }
+  ]
+}
+db.customers.find(
+  { email: { $regex: "^l", $options: "i" } },
+  { name: 1, email: 1, _id: 0 }
+);
+{
+  name: 'Linda Smith',
+  email: 'linda.smith1@example.com'
+}
+{
+  name: 'Linda Alam',
+  email: 'linda.alam21@example.com'
+}
+{
+  name: 'Linda Rahman',
+  email: 'linda.rahman25@example.com'
+}
+{
+  name: 'Lima Tawsar',
+  email: 'ltiw@example.com'
+}
+db.orders.updateOne(
+  { id: "ORD333" },
+  { $set: { status: "Delivered" } }
+);
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db.customers.updateOne(
+  { _id: "CUST333" },
+  { $set: { city: "Chittagong" } }
+);
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db.orders.deleteOne({ id: "ORD333" });
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+db.customers.deleteOne({ _id: "CUST333" });
